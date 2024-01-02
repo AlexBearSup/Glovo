@@ -17,27 +17,27 @@ public class OrderController {
         this.productService = productService;
     }
     @GetMapping("/{orderId}")
-    public Order get(@PathVariable Integer orderId) {
+    public Order get(@PathVariable Long orderId) {
         return orderService.get(orderId);
     }
     @PostMapping
-    public Integer create(@RequestBody Order order) {
+    public Long create(@RequestBody Order order) {
         return orderService.create(order);
     }
     @PutMapping("/{orderId}")
-    public void update(@PathVariable Integer orderId, @RequestBody Order updatedOrder) {
+    public void update(@PathVariable Long orderId, @RequestBody Order updatedOrder) {
         orderService.update(orderId, updatedOrder);
     }
     @PatchMapping("/{orderId}/addProduct")
-    public void addProduct(@PathVariable Integer orderId, @RequestBody Product product) {
+    public void addProduct(@PathVariable Long orderId, @RequestBody Product product) {
         productService.addToOrder(orderService.get(orderId), product);
     }
     @DeleteMapping("/{orderId}/removeProduct/{productId}")
-    public void removeProduct(@PathVariable Integer orderId, @PathVariable int productId) {
-        productService.removeFromOrder(orderService.get(orderId), productId);
+    public void removeProduct(@PathVariable Order orderId, @PathVariable Long productId) {
+        productService.removeFromOrder(orderService.get(orderId.getId()), productId);
     }
     @DeleteMapping("/{orderId}")
-    public void delete(@PathVariable Integer orderId) {
+    public void delete(@PathVariable Long orderId) {
         orderService.delete(orderId);
     }
 }

@@ -1,29 +1,32 @@
 package com.example.glovo.services;
 import com.example.glovo.dto.Order;
+import com.example.glovo.repository.OrderRepository;
+import com.example.glovo.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 public class OrderService {
-    private final Map<Integer, Order> orders = new HashMap<>();
-    private int orderIdCounter = 1;
-    public Order get(int orderId) {
-        return orders.get(orderId);
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
+    @Autowired
+    public OrderService(OrderRepository orderRepository, ProductRepository productRepository) {
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
     }
-    public int create(Order order) {
-        int orderId = orderIdCounter++;
-        order.setId(orderId);
-        orders.put(orderId, order);
-        return orderId;
+    public Order get(Long orderId) {
+        return orderRepository.findById(orderId).orElse(null);
     }
-    public void update(int orderId, Order updatedOrder) {
-        if (orders.containsKey(orderId)) {
-            orders.put(orderId, updatedOrder);
+    public Long create(Order order) {
+        Order savedOrder = orderRepository.save(order);
+        return savedOrder.getId();
+    }
+    public void update(Long orderId, Order updatedOrder) {
+        if (orderRepository.existsById(orderId)) {
+            updatedOrder.setId(orderId);
+            orderRepository.save(updatedOrder);
         }
     }
-    public void delete(int orderId) {
-        orders.remove(orderId);
+    public void delete(Long orderId) {
+        orderRepository.deleteById(orderId);
     }
 }
